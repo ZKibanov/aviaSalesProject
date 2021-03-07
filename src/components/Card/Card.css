@@ -1,0 +1,38 @@
+.content__card {
+  box-sizing: border-box;
+  width: 504px;
+  height: 184px;
+  border: 2px solid red;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  margin: 20px 20px 0 20px;
+}
+
+.card-price{
+font-family: "Open Sans";
+font-style: normal;
+font-weight: 600;
+font-size: 24px;
+line-height: 24px;
+}
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.card-body__part {
+  box-sizing: border-box;
+  margin: 10px auto;
+  width: 141px;
+  height: 39px;
+}
+
+.card-body__part-details {
+  border: 2px solid red;
+  margin: 0;
+}
