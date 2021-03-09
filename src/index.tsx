@@ -6,7 +6,7 @@ import store from './store/store';
 import GetRemoteUrl from './api/GetRemoteUrl';
 import getSortedIndexArray from './components/App/getSortedIndexArray';
 import * as actions from './store/actionTypes';
-import { Ticket,sortResult } from './components/App/types';
+import { Ticket, sortResult } from './components/App/types';
 
 const tickets: Ticket[] = [];
 const sortTickets = (ticketsArray: Ticket[]) => Object.assign({}, ticketsArray);
@@ -38,7 +38,15 @@ const addSortedOptimalToStore = (ticketsOrder: object[]) => {
   });
 };
 
+const setLoadingStatus = (loadingStatus: boolean) => {
+  store.dispatch({
+    type: actions.SET_LOADING,
+    payload: loadingStatus,
+  });
+};
+
 const initData = async () => {
+  setLoadingStatus(true);
   const searchId = await GetRemoteUrl.getResource(
     'https://front-test.beta.aviasales.ru/search'
   );
@@ -49,16 +57,19 @@ const initData = async () => {
     if (data && data.stop === true) {
       tickets.push(...data.tickets);
       addTicketsToStore(sortTickets(tickets));
+      setLoadingStatus(false);
       const sortedByTime: sortResult[] = getSortedIndexArray(tickets, [
         'segments',
         '0',
         'duration',
       ]);
       addSortedByTimeToStore(sortedByTime);
-      const sortedByPrice: sortResult[] = getSortedIndexArray(tickets, ['price']);
+      const sortedByPrice: sortResult[] = getSortedIndexArray(tickets, [
+        'price',
+      ]);
       addSortedByPriceToStore(sortedByPrice);
 
-      const sortByIndex = function (a:sortResult, b:sortResult) {
+      const sortByIndex = function (a: sortResult, b: sortResult) {
         if (a.index > b.index) {
           return 1;
         }
@@ -66,39 +77,45 @@ const initData = async () => {
           return -1;
         }
         return 0;
+      };
+
+      const sortedOptimal: sortResult[] = sortedByPrice
+        .map((el, position) => {
+          return {
+            index: el.index,
+            stops: el.stops,
+            value: position,
+          };
+        })
+        .sort(sortByIndex);
+
+      const sortedTimeForOptimal = sortedByTime
+        .map((el, position) => {
+          return {
+            index: el.index,
+            stops: el.stops,
+            value: position,
+          };
+        })
+        .sort(sortByIndex);
+
+      for (let i = 0; i < tickets.length; i += 1) {
+        sortedOptimal[i].value += sortedTimeForOptimal[i].value;
       }
 
-      const sortedOptimal: sortResult[] = (sortedByPrice.map((el,position)=>{
-        return {
-          index:el.index,
-          stops:el.stops,
-          value:position,
-        }
-      })).sort(sortByIndex)
+      addSortedOptimalToStore(
+        sortedOptimal.sort((a, b) => {
+          if (a.value > b.value) {
+            return 1;
+          }
+          if (a.value < b.value) {
+            return -1;
+          }
+          return 0;
+        })
+      );
 
-      const sortedTimeForOptimal = sortedByTime.map(((el,position)=>{
-        return {
-          index:el.index,
-          stops:el.stops,
-          value:position,
-        }
-      })).sort(sortByIndex);
-
-      for (let i = 0;i < tickets.length;i+=1){
-        sortedOptimal[i].value += sortedTimeForOptimal[i].value
-      }
-
-      addSortedOptimalToStore(sortedOptimal.sort((a,b)=>{
-        if (a.value > b.value) {
-          return 1;
-        }
-        if (a.value < b.value) {
-          return -1;
-        }
-        return 0;
-      }));
-
-    return;
+      return;
     }
 
     if (data && data.tickets) {

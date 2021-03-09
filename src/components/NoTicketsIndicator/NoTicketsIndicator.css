@@ -1,0 +1,43 @@
+.compass__wrap {
+  padding-top: 30px;
+  text-align: center;
+}
+.compass-v {
+  margin-left: 2px;
+  font-size: 10px;
+  color: red;
+}
+
+.compass__message {
+  font-family: 'Open Sans';
+  text-transform: uppercase;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: #4a4a4a;
+}
+.compass {
+  margin-top: -10px;
+  animation-name: rotate;
+  animation-duration: 10s;
+}
+
+@keyframes rotate {
+  25% {
+    transform: rotate(-90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+
+  75% {
+    transform: rotate(120deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

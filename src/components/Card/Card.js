@@ -44,7 +44,7 @@ function Card(props) {
   return (
     <div className={classes.content__card}>
       <div className={classes["card-header"]}>
-        <span className={classes["card-price"]}>{card.price}</span>
+        <span className={classes["card-price"]}>{card.price} </span>
         <span>
           <img
             src={cardLogo}
@@ -82,7 +82,7 @@ function Card(props) {
             {declOfNum(forwardTransfers, transferWordForms)}
           </p>
           <p className={classes["card-body__part-details"]}>
-            {forwardFly.stops.join(" ")}
+            {forwardFly.stops.join(", ")}
           </p>
         </div>
 
@@ -111,7 +111,7 @@ function Card(props) {
             {returnFlyTransfers || null}{" "}
             {declOfNum(returnFlyTransfers, transferWordForms)}
           </p>
-          <p className={classes["card-body__part-details"]}>{returnFly.stops.join(" ")}</p>
+          <p className={classes["card-body__part-details"]}>{returnFly.stops.join(", ")}</p>
         </div>
       </div>
     </div>

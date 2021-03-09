@@ -2,7 +2,8 @@ import logo from "./images/logo.svg";
 import classes from "./App.module.scss";
 import CardList from "../CardList";
 import Filters from "../Filters/Filters";
-import store from '../../store/store'
+import store from '../../store/store';
+import Spinner from '../Spinkit';
 import * as actions from "../../store/actionTypes";
 
 function App() {
@@ -15,11 +16,11 @@ function App() {
         });
       };
 
-    const getMoreTickets = () =>{
-      store.dispatch({
-        type:actions.GET_MORE_TICKETS
-      })
-    }
+    const isLoading = store.getState().isLoading;
+    const activeButton = store.getState().sorting.filterName;
+    const LoadingIndicator = isLoading ? <Spinner/> : null ;  
+
+
   return (
     <>
       <div className={classes.App}>
@@ -30,14 +31,14 @@ function App() {
         <Filters />
         <section className={classes.content__container}>
           <nav className={classes.nav}>
-            <button className={classes.nav__button} onClick={cEvent}>Самый дешевый</button>
-            <button className={classes.nav__button} onClick={cEvent}>Самый быстрый</button>
-            <button className={classes.nav__button} onClick={cEvent}>Оптимальный</button>
+            <button className={`${classes.nav__button} ${(activeButton === 'Самый дешевый')?classes['nav__button-active']:null}`} onClick={cEvent}>Самый дешевый</button>
+            <button className={`${classes.nav__button} ${(activeButton === 'Самый быстрый')?classes['nav__button-active']:null}`} onClick={cEvent}>Самый быстрый</button>
+            <button className={`${classes.nav__button} ${(activeButton === 'Оптимальный')?classes['nav__button-active']:null}`} onClick={cEvent}>Оптимальный</button>
           </nav>
           <div className={classes.content}>
+            {LoadingIndicator}
             <CardList />
           </div>
-          <button className ={classes.nav__button + ' ' + classes["nav__button-more"]} onClick = {getMoreTickets}>показать еще</button>
         </section>
       </main>
       </div>

@@ -1,5 +1,4 @@
 import * as actions from "./actionTypes";
-import filterBalancer from './filterBalancer'
 
 export default function reducer(
   state = {
@@ -19,8 +18,7 @@ export default function reducer(
     case actions.FILTERS_CHANGED:
       const newState = {
         ...state,
-        filters: filterBalancer(state[0],action.payload.filterName,action.payload.filterState)
-        // (state[0][action.payload.filterName] = action.payload.filterState),
+        filters: action.payload.filters
       };
       return newState;
     case actions.SET_SORTING:
@@ -55,6 +53,11 @@ export default function reducer(
         return {
           ...state,
           renderedTickets:state.renderedTickets+10,
+        }
+      case actions.SET_LOADING:
+        return {
+          ...state,
+          isLoading:action.payload,
         }
 
     default:

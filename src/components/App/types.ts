@@ -13,7 +13,7 @@ export type FlightDetails = {
 };
 
 export type sortResult = {
-  index:number;
-  value:number;
-  stops:number;
-}
+  index: number;
+  value: number;
+  stops: number;
+};

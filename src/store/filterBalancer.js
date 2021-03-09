@@ -1,34 +1,29 @@
-export default function filterBalancer(filtersObject,newFilter,newFilterState) {
-    if (newFilter === 'Все' && !!newFilterState) return {
+
+export default function filterBalancer(filtersObject,filterName,newFilterState) {
+   let newFiltersObject ={...filtersObject,
+    [filterName]:newFilterState
+}
+   if (filterName ==='Все'){
+       newFiltersObject = newFilterState ? {
         'Все': true,
         "Без пересадок": true,
         "1 пересадка": true,
         "2 пересадки": true,
         "3 пересадки": true,
-    }
-    if (newFilter === 'Без пересадок'&& !!newFilterState){
-        return {
-            'Все': false,
-            "Без пересадок": true,
-            "1 пересадка": false,
-            "2 пересадки": false,
-            "3 пересадки": false,
+       } : {
+        'Все': false,
+        "Без пересадок": false,
+        "1 пересадка": false,
+        "2 пересадки": false,
+        "3 пересадки": false,  
+       }} else {
+        let counter = 0
+        for (let key in newFiltersObject){
+           counter += newFiltersObject[key];
         }
-    }
-    
-    const newFiltersObject = { ...filtersObject }
-    newFiltersObject[newFilter] = newFilterState;
-    const getActiveFiltersCount = (someObject) =>{
-        let counter = 0;
-      for (const key in someObject) {
-        if (someObject[key].value) counter+=1;
-      }
-      return counter;
-    }
+        if (counter === 4) {newFiltersObject['Все'] = newFilterState};
+       }
 
-    const activeFilters = getActiveFiltersCount(newFiltersObject);
-    console.log(activeFilters);
 
     return newFiltersObject;
-
 }

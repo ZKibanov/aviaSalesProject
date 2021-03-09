@@ -1,11 +1,10 @@
 import * as actions from "./actionTypes";
 
-export function filtersChanged(filterName, filterState) {
+export function filtersChanged(filters) {
   return {
     type: actions.FILTERS_CHANGED,
     payload: {
-      filterName,
-      filterState,
+      filters
     },
   };
 }
@@ -50,6 +49,15 @@ export function setSorting(sortName){
     type:actions.SET_SORTING,
     payload:{
       sortName
+    }
+  }
+}
+
+export function setLoading (isLoading){
+  return {
+    type:actions.SET_LOADING,
+    payload:{
+      isLoading
     }
   }
 }
