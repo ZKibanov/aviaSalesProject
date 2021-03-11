@@ -6,10 +6,10 @@ import store from './store/store';
 import GetRemoteUrl from './api/GetRemoteUrl';
 import getSortedIndexArray from './components/App/getSortedIndexArray';
 import * as actions from './store/actionTypes';
-import { Ticket, sortResult } from './components/App/types';
+import { Ticket, SortResult } from './components/types';
 
 const tickets: Ticket[] = [];
-const sortTickets = (ticketsArray: Ticket[]) => Object.assign({}, ticketsArray);
+const sortTickets = (ticketsArray: Ticket[]) => ({ ...ticketsArray });
 const addTicketsToStore = (ticketsArray: Ticket[]) => {
   store.dispatch({
     type: actions.TICKETS_ADDED,
@@ -45,87 +45,96 @@ const setLoadingStatus = (loadingStatus: boolean) => {
   });
 };
 
+interface SearchId {
+  searchId: string;
+}
+
+interface Data {
+  tickets: Ticket[];
+  stop: boolean;
+}
+
 const initData = async () => {
   setLoadingStatus(true);
   const searchId = await GetRemoteUrl.getResource(
     'https://front-test.beta.aviasales.ru/search'
   );
-  const getTickets = async () => {
-    const data = await GetRemoteUrl.getResource(
-      `https://front-test.beta.aviasales.ru/tickets?searchId=${searchId.searchId}`
-    );
-    if (data && data.stop === true) {
-      tickets.push(...data.tickets);
-      addTicketsToStore(sortTickets(tickets));
-      setLoadingStatus(false);
-      const sortedByTime: sortResult[] = getSortedIndexArray(tickets, [
-        'segments',
-        '0',
-        'duration',
-      ]);
-      addSortedByTimeToStore(sortedByTime);
-      const sortedByPrice: sortResult[] = getSortedIndexArray(tickets, [
-        'price',
-      ]);
-      addSortedByPriceToStore(sortedByPrice);
 
-      const sortByIndex = function (a: sortResult, b: sortResult) {
-        if (a.index > b.index) {
-          return 1;
-        }
-        if (a.index < b.index) {
-          return -1;
-        }
-        return 0;
-      };
+  if (searchId === null) {
+    initData();
+  } else {
+    const getTickets = async () => {
+      const data = await GetRemoteUrl.getResource(
+        `https://front-test.beta.aviasales.ru/tickets?searchId=${
+          (searchId as SearchId).searchId
+        }`
+      );
+      if (data !== null && (data as Data).stop === true) {
+        tickets.push(...(data as Data).tickets);
+        addTicketsToStore(sortTickets(tickets));
+        setLoadingStatus(false);
+        const sortedByTime: SortResult[] = getSortedIndexArray(tickets, 'time');
+        addSortedByTimeToStore(sortedByTime);
+        const sortedByPrice: SortResult[] = getSortedIndexArray(
+          tickets,
+          'price'
+        );
+        addSortedByPriceToStore(sortedByPrice);
 
-      const sortedOptimal: sortResult[] = sortedByPrice
-        .map((el, position) => {
-          return {
-            index: el.index,
-            stops: el.stops,
-            value: position,
-          };
-        })
-        .sort(sortByIndex);
-
-      const sortedTimeForOptimal = sortedByTime
-        .map((el, position) => {
-          return {
-            index: el.index,
-            stops: el.stops,
-            value: position,
-          };
-        })
-        .sort(sortByIndex);
-
-      for (let i = 0; i < tickets.length; i += 1) {
-        sortedOptimal[i].value += sortedTimeForOptimal[i].value;
-      }
-
-      addSortedOptimalToStore(
-        sortedOptimal.sort((a, b) => {
-          if (a.value > b.value) {
+        const sortByIndex = (a: SortResult, b: SortResult) => {
+          if (a.index > b.index) {
             return 1;
           }
-          if (a.value < b.value) {
+          if (a.index < b.index) {
             return -1;
           }
           return 0;
-        })
-      );
+        };
 
-      return;
-    }
+        const sortedOptimal: SortResult[] = sortedByPrice
+          .map((el, position) => ({
+            index: el.index,
+            stops: el.stops,
+            value: position,
+          }))
+          .sort(sortByIndex);
 
-    if (data && data.tickets) {
-      tickets.push(...data.tickets);
-      getTickets();
-    } else {
-      getTickets();
-    }
-  };
-  getTickets();
+        const sortedTimeForOptimal = sortedByTime
+          .map((el, position) => ({
+            index: el.index,
+            stops: el.stops,
+            value: position,
+          }))
+          .sort(sortByIndex);
+
+        for (let i = 0; i < tickets.length; i += 1) {
+          sortedOptimal[i].value += sortedTimeForOptimal[i].value;
+        }
+
+        addSortedOptimalToStore(
+          sortedOptimal.sort((a, b) => {
+            if (a.value > b.value) {
+              return 1;
+            }
+            if (a.value < b.value) {
+              return -1;
+            }
+            return 0;
+          })
+        );
+
+        return;
+      }
+
+      if (data && (data as Data).tickets) {
+        tickets.push(...(data as Data).tickets);
+        getTickets();
+      } else {
+        getTickets();
+      }
+    };
+    getTickets();
+  }
 };
 
 initData();

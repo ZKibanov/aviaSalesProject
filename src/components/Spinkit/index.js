@@ -1,3 +1,4 @@
 import Spinner from './Spinner';
-import "./spinkit.css";
+import './spinkit.css';
+
 export default Spinner;

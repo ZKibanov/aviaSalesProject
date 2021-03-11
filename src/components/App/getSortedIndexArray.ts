@@ -1,52 +1,37 @@
-import { Ticket, sortResult } from './types';
+import { Ticket, SortResult } from '../types';
 
 export default function getSortedIndexArray(
   list: Ticket[],
-  property: string[]
-): sortResult[] {
-  const getValueByPath = (obj: any, path: string[]): any | undefined => {
-    let result: any = obj;
-    path.forEach((propName: string) => {
-      if (result !== undefined && typeof result === 'object') {
-        result = result[propName];
-      }
-    });
-    return result;
-  };
+  property: string
+): SortResult[] {
+  type TicketParsingFunction = (obj: Ticket) => number;
 
-  const pathToStops1 = ['segments', '0', 'stops'];
-  const pathToStops2 = ['segments', '1', 'stops'];
+  const getPriceValue: TicketParsingFunction = (obj) => obj.price;
 
-  let mapped: sortResult[] = [];
+  const getDurationValue: TicketParsingFunction = (obj) =>
+    obj.segments[0].duration + obj.segments[1].duration;
 
-  if (property[0] === 'price') {
-    mapped = list.map(function (el, i) {
-      return {
-        index: i,
-        value: getValueByPath(el, property),
-        stops:
-          getValueByPath(el, pathToStops1).length +
-          getValueByPath(el, pathToStops2).length,
-      };
-    });
+  const getStopsQuantity: TicketParsingFunction = (obj) =>
+    obj.segments[0].stops.length + obj.segments[1].stops.length;
+
+  let mapped: SortResult[] = [];
+
+  if (property === 'price') {
+    mapped = list.map((el, i) => ({
+      index: i,
+      value: getPriceValue(el),
+      stops: getStopsQuantity(el),
+    }));
   }
-  if (property[0] === 'segments') {
-    mapped = list.map(function (el, i) {
-      const firstSegmentTime = getValueByPath(el, property);
-      const secondSegmentProperty = [...property];
-      secondSegmentProperty[1] = '1';
-      const secondSegmentTime = getValueByPath(el, secondSegmentProperty);
-      return {
-        index: i,
-        value: firstSegmentTime + secondSegmentTime,
-        stops:
-          getValueByPath(el, pathToStops1).length +
-          getValueByPath(el, pathToStops2).length,
-      };
-    });
+  if (property === 'time') {
+    mapped = list.map((el, i) => ({
+      index: i,
+      value: getDurationValue(el),
+      stops: getStopsQuantity(el),
+    }));
   }
 
-  mapped.sort(function (a: sortResult, b: sortResult) {
+  mapped.sort((a: SortResult, b: SortResult) => {
     if (a.value > b.value) {
       return 1;
     }
@@ -56,9 +41,11 @@ export default function getSortedIndexArray(
     return 0;
   });
 
-  const result = mapped.map(function (el: sortResult) {
-    return { index: el.index, value: el.value, stops: el.stops };
-  });
+  const result = mapped.map((el: SortResult) => ({
+    index: el.index,
+    value: el.value,
+    stops: el.stops,
+  }));
 
   return result;
 }

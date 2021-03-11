@@ -12,7 +12,7 @@ export type FlightDetails = {
   duration: number;
 };
 
-export type sortResult = {
+export type SortResult = {
   index: number;
   value: number;
   stops: number;
