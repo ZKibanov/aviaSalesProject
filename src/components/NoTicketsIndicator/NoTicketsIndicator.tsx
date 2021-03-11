@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import compass from './compass.svg';
 
-const NoTicketsIndicator = () => (
+const NoTicketsIndicator: FC = () => (
   <div className="compass__wrap">
     <p className="compass-v"> &#9660; </p>
     <img

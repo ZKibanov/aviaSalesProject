@@ -34,8 +34,14 @@ function Filters() {
 
   for (const key in filtersState) {
     if (filtersState[key] === true || filtersState[key] === false) {
+      const reactKey: number =
+        typeof key[0] === 'number' ? key[0] : key.charCodeAt(0);
       checkboxArray.push(
-        <label htmlFor={`chBox${key}`} className={classes.filter}>
+        <label
+          htmlFor={`chBox${key}`}
+          key={reactKey}
+          className={classes.filter}
+        >
           <input
             id={`chBox${key}`}
             className={classes.filter__input}

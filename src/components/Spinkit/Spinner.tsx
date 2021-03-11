@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-const Spinner = () => (
+const Spinner: FC = () => (
   <>
     <div className="sk-flow">
       <div className="sk-flow-dot" />

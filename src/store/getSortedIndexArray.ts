@@ -1,4 +1,4 @@
-import { Ticket, SortResult } from '../types';
+import { Ticket, SortResult } from '../components/types';
 
 export default function getSortedIndexArray(
   list: Ticket[],

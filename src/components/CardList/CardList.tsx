@@ -2,7 +2,7 @@ import React from 'react';
 import Card from '../Card';
 import store from '../../store/store';
 import NoTicketsIndicator from '../NoTicketsIndicator';
-import { SortResult } from '../types';
+import { SortResult, Ticket } from '../types';
 import classes from './CardList.module.scss';
 import * as actions from '../../store/actionTypes';
 
@@ -53,12 +53,13 @@ function CardList(): JSX.Element {
 
     if (tickets && filteredArray) {
       for (let i = 0; i < ticketsQuantity; i += 1) {
-        const ticketIndex = filteredArray[i].index;
-        const ticket = tickets[ticketIndex];
+        const ticketIndex: number = filteredArray[i].index;
+        const ticket: Ticket = tickets[ticketIndex];
         finalArray.push(<Card key={ticketIndex} card={ticket} />);
       }
       finalArray.push(
         <button
+          key="nav_button-more"
           type="button"
           className={classes['nav__button-more']}
           onClick={getMoreTickets}
