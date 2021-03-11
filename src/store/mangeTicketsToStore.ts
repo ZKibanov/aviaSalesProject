@@ -32,16 +32,8 @@ const addSortedOptimalToStore = (ticketsOrder: object[]) => {
   });
 };
 
-const setLoadingStatus = (loadingStatus: boolean) => {
-  store.dispatch({
-    type: actions.SET_LOADING,
-    payload: loadingStatus,
-  });
-};
-
 const manageTicketsToStore = (tickets: Ticket[]): void => {
   addTicketsToStore(sortTickets(tickets));
-  setLoadingStatus(false);
   const sortedByTime: SortResult[] = getSortedIndexArray(tickets, 'time');
   addSortedByTimeToStore(sortedByTime);
   const sortedByPrice: SortResult[] = getSortedIndexArray(tickets, 'price');

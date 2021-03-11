@@ -117,3 +117,57 @@ $mainBackgroundColor: #fff;
 .content__container {
   margin-left: 20px;
 }
+
+@media (min-width: 504px) and (max-width: 960px) {
+  .filter {
+    width: 478px;
+  }
+  .filter__container {
+    width: 504px;
+    margin-left: 0;
+  }
+
+  .main {
+    flex-direction: column;
+  }
+
+  .App {
+    width: 504px;
+  }
+
+  .content__container {
+    margin-top: 20px;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 503px) {
+  .filter {
+    width: 100%;
+  }
+  .filter__container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .main {
+    flex-direction: column;
+  }
+
+  .App {
+    width: 100%;
+  }
+
+  .content__container {
+    margin-top: 20px;
+    margin-left: 0;
+  }
+
+  .nav__button {
+    width: 33%;
+  }
+
+  .nav {
+    width: 100%;
+  }
+}

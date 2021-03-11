@@ -38,6 +38,7 @@ const initData = async () => {
         }`
       );
       if (data && (data as Data).stop === true) {
+        setLoadingStatus(false);
         tickets.push(...(data as Data).tickets);
         manageTicketsToStore(tickets);
       } else if (data && (data as Data).stop === false) {
