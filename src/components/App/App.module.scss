@@ -76,6 +76,10 @@ $mainBackgroundColor: #fff;
   background-image: url('./images/checkbox-active-checked.svg');
 }
 
+.filter__input:focus:not(:checked) + .check__box {
+  background-image: url('./images/checkbox-active.svg');
+}
+
 .main {
   margin: 0 auto;
   display: flex;
