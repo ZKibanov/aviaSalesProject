@@ -24,9 +24,10 @@ $mainBackgroundColor: #fff;
 }
 
 .filter {
+  box-sizing: border-box;
   line-height: 40px;
   padding-left: 25px;
-  width: 207px;
+  width: 232px;
   height: 40px;
   cursor: pointer;
   font-family: 'Open Sans';
@@ -54,12 +55,12 @@ $mainBackgroundColor: #fff;
 }
 
 .check__box {
-  font-size: 16px;
+  font-size: 18px;
   position: absolute;
   margin-top: 10px;
   margin-left: -25px;
-  width: 1.3em;
-  height: 1.3em;
+  width: 1.2em;
+  height: 1.2em;
   background: center no-repeat url('./images/checkbox.svg');
 }
 
@@ -120,11 +121,16 @@ $mainBackgroundColor: #fff;
 
 @media (min-width: 504px) and (max-width: 960px) {
   .filter {
-    width: 478px;
+    width: 504px;
   }
   .filter__container {
     width: 504px;
     margin-left: 0;
+  }
+
+  .check__box {
+    position: absolute;
+    
   }
 
   .main {
@@ -141,13 +147,21 @@ $mainBackgroundColor: #fff;
   }
 }
 
-@media (max-width: 503px) {
+@media (max-width: 503px) { 
+
   .filter {
+    text-align: end;
+    padding-right:35px;
     width: 100%;
   }
   .filter__container {
     width: 100%;
     margin-left: 0;
+  }
+
+  .check__box {
+    position: absolute;
+    right:5px;
   }
 
   .main {

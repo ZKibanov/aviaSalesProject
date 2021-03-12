@@ -1,1 +1,1 @@
-https://aviasalesproject-98p6cxq3e-zkibanov.vercel.app/
+https://aviasalesproject-732uquq5z-zkibanov.vercel.app/
