@@ -47,7 +47,7 @@ function Card(props: IProps) {
   const returnFlyTransfers = returnFly.stops.length;
 
   return (
-    <div className={classes.content__card}>
+    <li className={classes.content__card}>
       <div className={classes['card-header']}>
         <span className={classes['card-price']}>{card.price} </span>
         <span>
@@ -121,7 +121,7 @@ function Card(props: IProps) {
           </p>
         </div>
       </div>
-    </div>
+    </li>
   );
 }
 

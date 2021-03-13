@@ -69,7 +69,7 @@ function CardList(): JSX.Element {
       );
     }
   }
-  return <>{finalArray}</>;
+  return <ul className={classes['ticket-list']}>{finalArray}</ul>;
 }
 
 export default CardList;

@@ -2,6 +2,9 @@ $headersColor: #4a4a4a;
 $buttonColor: #2196f3;
 $backgroundColor: #f3f7fa;
 $mainBackgroundColor: #fff;
+.content {
+  list-style: none;
+}
 .App {
   margin: 0 auto;
   width: 960px;
@@ -134,7 +137,6 @@ $mainBackgroundColor: #fff;
 
   .check__box {
     position: absolute;
-    
   }
 
   .main {
@@ -151,11 +153,10 @@ $mainBackgroundColor: #fff;
   }
 }
 
-@media (max-width: 503px) { 
-
+@media (min-width: 401px) and (max-width: 503px) {
   .filter {
     text-align: end;
-    padding-right:35px;
+    padding-right: 35px;
     width: 100%;
   }
   .filter__container {
@@ -165,7 +166,7 @@ $mainBackgroundColor: #fff;
 
   .check__box {
     position: absolute;
-    right:5px;
+    right: 5px;
   }
 
   .main {
@@ -187,5 +188,40 @@ $mainBackgroundColor: #fff;
 
   .nav {
     width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .filter {
+    width: 400px;
+  }
+  .filter__container {
+    width: 400px;
+    margin-left: 0;
+  }
+
+  .check__box {
+    position: absolute;
+  }
+
+  .main {
+    flex-direction: column;
+  }
+
+  .App {
+    width: 400px;
+  }
+
+  .content__container {
+    margin-top: 20px;
+    margin-left: 0;
+  }
+
+  .nav__button {
+    width: 33%;
+  }
+
+  .nav {
+    width: 400px;
   }
 }
