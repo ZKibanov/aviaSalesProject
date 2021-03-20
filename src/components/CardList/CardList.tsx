@@ -1,38 +1,44 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Card from '../Card';
-import store from '../../store/store';
+import { RootState } from '../../store/store';
 import NoTicketsIndicator from '../NoTicketsIndicator';
-import { SortResult, Ticket } from '../types';
+import { Ticket } from '../types';
 import classes from './CardList.module.scss';
-import * as actions from '../../store/actionTypes';
+import * as actions from '../../store/actions';
 
 function CardList(): JSX.Element {
-  const getMoreTickets = () => {
-    store.dispatch({
-      type: actions.GET_MORE_TICKETS,
-    });
-  };
+  const dispatch = useDispatch();
+  const getMoreTickets = () => dispatch(actions.getMoreTickets());
 
   const finalArray = [];
-  const ticketsQuantity = store.getState().renderedTickets;
-  const { tickets } = store.getState();
-  const sortingValue = store.getState().sorting.filterName;
-  let sortingOrder: SortResult[];
-  switch (sortingValue) {
-    case 'Самый быстрый':
-      sortingOrder = store.getState().timeSorted;
-      break;
-    case 'Самый дешевый':
-      sortingOrder = store.getState().priceSorted;
-      break;
-    case 'Оптимальный':
-      sortingOrder = store.getState().optimalSorted;
-      break;
-    default:
-      sortingOrder = store.getState().priceSorted;
-  }
+  const ticketsQuantity = useSelector(
+    (state: RootState) => state.renderedTickets
+  );
 
-  const filtersState = store.getState().filters;
+  const { tickets } = useSelector((state: RootState) => state);
+  const sortingValue: string = useSelector(
+    (state: RootState) => state.sorting.filterName
+  );
+
+  type SortingMatrix = [
+    ['timeSorted', 'Самый быстрый'],
+    ['priceSorted', 'Самый дешевый'],
+    ['optimalSorted', 'Оптимальный']
+  ];
+
+  const sortingMatrix: SortingMatrix = [
+    ['timeSorted', 'Самый быстрый'],
+    ['priceSorted', 'Самый дешевый'],
+    ['optimalSorted', 'Оптимальный'],
+  ];
+
+  const orderValue = sortingMatrix.filter((el) =>
+    el[1] === sortingValue ? el[0] : false
+  )[0][0];
+  const sortingOrder = useSelector((state: RootState) => state[orderValue]);
+
+  const filtersState = useSelector((state: RootState) => state.filters);
   const filterMatrix = [
     filtersState['Без пересадок'],
     filtersState['1 пересадка'],
@@ -40,10 +46,12 @@ function CardList(): JSX.Element {
     filtersState['3 пересадки'],
   ];
   const filteredArray = [];
-  if (!filterMatrix.includes(true)) return <NoTicketsIndicator />;
+  const isLoading = useSelector((state: RootState) => state.isLoading);
+  if (!filterMatrix.includes(true) || sortingOrder.length === 0)
+    return isLoading || <NoTicketsIndicator />;
   if (tickets && sortingOrder) {
     let j = 0;
-    while (filteredArray.length < ticketsQuantity) {
+    while (filteredArray.length < ticketsQuantity && sortingOrder[j]) {
       const matrixNumber: number = sortingOrder[j].stops;
       if (filterMatrix[matrixNumber]) {
         filteredArray.push(sortingOrder[j]);
@@ -53,9 +61,11 @@ function CardList(): JSX.Element {
 
     if (tickets && filteredArray) {
       for (let i = 0; i < ticketsQuantity; i += 1) {
-        const ticketIndex: number = filteredArray[i].index;
-        const ticket: Ticket = tickets[ticketIndex];
-        finalArray.push(<Card key={ticketIndex} card={ticket} />);
+        if (filteredArray[i]) {
+          const ticketIndex: number = filteredArray[i].index;
+          const ticket: Ticket = tickets[ticketIndex];
+          finalArray.push(<Card key={ticketIndex} card={ticket} />);
+        }
       }
       finalArray.push(
         <button

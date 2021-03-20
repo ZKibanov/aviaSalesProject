@@ -1,19 +1,23 @@
 import * as actions from './actionTypes';
 
-export default function reducer(
-  state = {
-    filters: {
-      Все: true,
-      'Без пересадок': true,
-      '1 пересадка': true,
-      '2 пересадки': true,
-      '3 пересадки': true,
-    },
-    sorting: { filterName: 'Самый быстрый' },
-    renderedTickets: 10,
+const initialState = {
+  isLoading: false,
+  filters: {
+    Все: true,
+    'Без пересадок': true,
+    '1 пересадка': true,
+    '2 пересадки': true,
+    '3 пересадки': true,
   },
-  action
-) {
+  tickets: [],
+  timeSorted: [],
+  priceSorted: [],
+  optimalSorted: [],
+  sorting: { filterName: 'Самый быстрый' },
+  renderedTickets: 10,
+};
+
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.FILTERS_CHANGED:
       return {

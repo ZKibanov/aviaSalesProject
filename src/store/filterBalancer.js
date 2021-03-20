@@ -5,21 +5,22 @@ export default function filterBalancer(
 ) {
   let newFiltersObject = { ...filtersObject, [filterName]: newFilterState };
   if (filterName === 'Все') {
-    newFiltersObject = newFilterState
-      ? {
-          Все: true,
-          'Без пересадок': true,
-          '1 пересадка': true,
-          '2 пересадки': true,
-          '3 пересадки': true,
-        }
-      : {
-          Все: false,
-          'Без пересадок': false,
-          '1 пересадка': false,
-          '2 пересадки': false,
-          '3 пересадки': false,
-        };
+    newFiltersObject =
+      newFilterState === true
+        ? {
+            Все: true,
+            'Без пересадок': true,
+            '1 пересадка': true,
+            '2 пересадки': true,
+            '3 пересадки': true,
+          }
+        : {
+            Все: false,
+            'Без пересадок': false,
+            '1 пересадка': false,
+            '2 пересадки': false,
+            '3 пересадки': false,
+          };
   } else {
     let counter = 0;
     for (const key in newFiltersObject) {

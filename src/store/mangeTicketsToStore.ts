@@ -1,43 +1,17 @@
-import getSortedIndexArray from './getSortedIndexArray';
-import * as actions from './actionTypes';
+import getSortedIndexArray, { sortNumbers } from './getSortedIndexArray';
+import * as actions from './actions';
 import { Ticket, SortResult } from '../components/types';
 import store from './store';
 
 const sortTickets = (ticketsArray: Ticket[]) => ({ ...ticketsArray });
-const addTicketsToStore = (ticketsArray: Ticket[]) => {
-  store.dispatch({
-    type: actions.TICKETS_ADDED,
-    payload: ticketsArray,
-  });
-};
-
-const addSortedByTimeToStore = (ticketsOrder: object[]) => {
-  store.dispatch({
-    type: actions.SORTED_BYTIME_ADDED,
-    payload: ticketsOrder,
-  });
-};
-
-const addSortedByPriceToStore = (ticketsOrder: object[]) => {
-  store.dispatch({
-    type: actions.SORTED_BYPRICE_ADDED,
-    payload: ticketsOrder,
-  });
-};
-
-const addSortedOptimalToStore = (ticketsOrder: object[]) => {
-  store.dispatch({
-    type: actions.SORTED_OPTIMAL_ADDED,
-    payload: ticketsOrder,
-  });
-};
 
 const manageTicketsToStore = (tickets: Ticket[]): void => {
-  addTicketsToStore(sortTickets(tickets));
   const sortedByTime: SortResult[] = getSortedIndexArray(tickets, 'time');
-  addSortedByTimeToStore(sortedByTime);
   const sortedByPrice: SortResult[] = getSortedIndexArray(tickets, 'price');
-  addSortedByPriceToStore(sortedByPrice);
+
+  store.dispatch(actions.ticketsAdded(sortTickets(tickets)));
+  store.dispatch(actions.sortedByTimeAdded(sortedByTime));
+  store.dispatch(actions.sortedByPriceAdded(sortedByPrice));
 
   const sortByIndex = (a: SortResult, b: SortResult) => {
     if (a.index > b.index) {
@@ -68,18 +42,7 @@ const manageTicketsToStore = (tickets: Ticket[]): void => {
   for (let i = 0; i < tickets.length; i += 1) {
     sortedOptimal[i].value += sortedTimeForOptimal[i].value;
   }
-
-  addSortedOptimalToStore(
-    sortedOptimal.sort((a, b) => {
-      if (a.value > b.value) {
-        return 1;
-      }
-      if (a.value < b.value) {
-        return -1;
-      }
-      return 0;
-    })
-  );
+  store.dispatch(actions.sortedOptimalAdded(sortedOptimal.sort(sortNumbers)));
 };
 
 export default manageTicketsToStore;

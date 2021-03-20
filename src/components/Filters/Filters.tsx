@@ -1,11 +1,14 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classes from '../App/App.module.scss';
-import store from '../../store/store';
-import * as actions from '../../store/actionTypes';
+import { RootState } from '../../store/store';
+import * as actions from '../../store/actions';
 import filterBalancer from '../../store/filterBalancer';
 
 function Filters() {
-  const filtersState = store.getState().filters;
+  const dispatch = useDispatch();
+
+  const filtersState = useSelector((state: RootState) => state.filters);
   const checkboxArray = [];
   const cEvent = (ev: React.ChangeEvent<HTMLInputElement>) => {
     type Filters = {
@@ -22,18 +25,12 @@ function Filters() {
         ev.target.labels[0].textContent,
         ev.target.checked
       );
-
-      store.dispatch({
-        type: actions.FILTERS_CHANGED,
-        payload: {
-          filters: newFilters,
-        },
-      });
+      dispatch(actions.filtersChanged(newFilters));
     }
   };
 
   for (const key in filtersState) {
-    if (filtersState[key] === true || filtersState[key] === false) {
+    if (typeof filtersState[key] === 'boolean') {
       const reactKey: number =
         typeof key[0] === 'number' ? key[0] : key.charCodeAt(0);
       checkboxArray.push(

@@ -1,25 +1,25 @@
 import React, { FC } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import logo from './images/logo.svg';
 import classes from './App.module.scss';
 import CardList from '../CardList';
 import Filters from '../Filters/Filters';
-import store from '../../store/store';
+import { RootState } from '../../store/store';
 import Spinner from '../Spinkit';
-import * as actions from '../../store/actionTypes';
+import * as actions from '../../store/actions';
 
 const App: FC = () => {
+  const dispatch = useDispatch();
   const cEvent = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    store.dispatch({
-      type: actions.SET_SORTING,
-      payload: {
-        filterName: ev.currentTarget.textContent,
-      },
-    });
+    const sortingValue = ev.currentTarget.textContent;
+    dispatch(actions.setSorting(sortingValue));
   };
 
-  const { isLoading } = store.getState();
-  const activeButton = store.getState().sorting.filterName;
-  const LoadingIndicator = isLoading ? <Spinner /> : null;
+  const isLoading = useSelector((state: RootState) => state.isLoading);
+  const activeButton = useSelector(
+    (state: RootState) => state.sorting.filterName
+  );
+  const LoadingIndicator = isLoading && <Spinner />;
 
   return (
     <>

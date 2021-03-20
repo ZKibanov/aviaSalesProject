@@ -7,6 +7,31 @@ interface IProps {
   card: Ticket;
 }
 
+function declOfNum(num: number, text_forms: string[]) {
+  const n = Math.abs(num) % 100;
+  const n1 = n % 10;
+  if (n === 0) {
+    return text_forms[0];
+  }
+  if (n >= 5) {
+    return text_forms[3];
+  }
+  if (n1 > 1 && n1 < 5) {
+    return text_forms[2];
+  }
+  if (n1 === 1) {
+    return text_forms[1];
+  }
+  return text_forms[2];
+}
+
+const transferWordForms = [
+  'без пересадок',
+  'пересадка',
+  'пересадки',
+  'пересадок',
+];
+
 function Card(props: IProps) {
   const { card } = props;
   const forwardFly = card.segments[0];
@@ -17,31 +42,6 @@ function Card(props: IProps) {
   )
     ? `/images/${card.carrier}.svg`
     : `//pics.avs.io/99/36/${card.carrier}.png`;
-
-  function declOfNum(num: number, text_forms: string[]) {
-    const n = Math.abs(num) % 100;
-    const n1 = n % 10;
-    if (n === 0) {
-      return text_forms[0];
-    }
-    if (n >= 5) {
-      return text_forms[3];
-    }
-    if (n1 > 1 && n1 < 5) {
-      return text_forms[2];
-    }
-    if (n1 === 1) {
-      return text_forms[1];
-    }
-    return text_forms[2];
-  }
-
-  const transferWordForms = [
-    'без пересадок',
-    'пересадка',
-    'пересадки',
-    'пересадок',
-  ];
 
   const forwardTransfers = forwardFly.stops.length;
   const returnFlyTransfers = returnFly.stops.length;
