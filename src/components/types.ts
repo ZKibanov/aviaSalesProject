@@ -17,3 +17,11 @@ export type SortResult = {
   value: number;
   stops: number;
 };
+
+export type FiltersObject = {
+  Все: boolean;
+  'Без пересадок': boolean;
+  '1 пересадка': boolean;
+  '2 пересадки': boolean;
+  '3 пересадки': boolean;
+};

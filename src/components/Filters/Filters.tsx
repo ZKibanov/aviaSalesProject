@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiltersObject } from '../types';
 import classes from '../App/App.module.scss';
 import { RootState } from '../../store/store';
 import * as actions from '../../store/actions';
@@ -8,19 +9,11 @@ import filterBalancer from '../../store/filterBalancer';
 function Filters() {
   const dispatch = useDispatch();
 
-  const filtersState = useSelector((state: RootState) => state.filters);
+  const filtersState = useSelector((state: RootState) => state.ui.filters);
   const checkboxArray = [];
   const cEvent = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    type Filters = {
-      Все: boolean;
-      'Без пересадок': boolean;
-      '1 пересадка': boolean;
-      '2 пересадки': boolean;
-      '3 пересадки': boolean;
-    };
-
     if (ev.target.labels !== null) {
-      const newFilters: Filters = filterBalancer(
+      const newFilters: FiltersObject = filterBalancer(
         filtersState,
         ev.target.labels[0].textContent,
         ev.target.checked

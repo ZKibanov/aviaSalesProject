@@ -11,13 +11,15 @@ import * as actions from '../../store/actions';
 const App: FC = () => {
   const dispatch = useDispatch();
   const cEvent = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    const sortingValue = ev.currentTarget.textContent;
-    dispatch(actions.setSorting(sortingValue));
+    if (ev.currentTarget.textContent) {
+      const sortingValue = ev.currentTarget.textContent;
+      dispatch(actions.setSorting(sortingValue));
+    }
   };
 
-  const isLoading = useSelector((state: RootState) => state.isLoading);
+  const isLoading = useSelector((state: RootState) => state.ui.isLoading);
   const activeButton = useSelector(
-    (state: RootState) => state.sorting.filterName
+    (state: RootState) => state.ui.sorting.filterName
   );
   const LoadingIndicator = isLoading && <Spinner />;
 

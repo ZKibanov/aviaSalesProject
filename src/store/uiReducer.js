@@ -9,15 +9,11 @@ const initialState = {
     '2 пересадки': true,
     '3 пересадки': true,
   },
-  tickets: [],
-  timeSorted: [],
-  priceSorted: [],
-  optimalSorted: [],
   sorting: { filterName: 'Самый быстрый' },
   renderedTickets: 10,
 };
 
-export default function reducer(state = initialState, action) {
+export default function uiReducer(state = initialState, action) {
   switch (action.type) {
     case actions.FILTERS_CHANGED:
       return {
@@ -28,28 +24,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         sorting: action.payload,
-      };
-    case actions.TICKETS_ADDED:
-      return {
-        ...state,
-        tickets: action.payload,
-      };
-    case actions.SORTED_BYPRICE_ADDED:
-      return {
-        ...state,
-        priceSorted: action.payload,
-      };
-
-    case actions.SORTED_BYTIME_ADDED:
-      return {
-        ...state,
-        timeSorted: action.payload,
-      };
-
-    case actions.SORTED_OPTIMAL_ADDED:
-      return {
-        ...state,
-        optimalSorted: action.payload,
       };
 
     case actions.GET_MORE_TICKETS:
