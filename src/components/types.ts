@@ -12,12 +12,6 @@ export type FlightDetails = {
   duration: number;
 };
 
-export type SortResult = {
-  index: number;
-  value: number;
-  stops: number;
-};
-
 export type FiltersObject = {
   Все: boolean;
   'Без пересадок': boolean;

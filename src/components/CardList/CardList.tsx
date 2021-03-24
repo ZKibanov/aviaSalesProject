@@ -3,16 +3,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import Card from '../Card';
 import { RootState } from '../../store/store';
 import NoTicketsIndicator from '../NoTicketsIndicator';
-import { Ticket, SortResult } from '../types';
+import { Ticket } from '../types';
+import { getValueByPath, getSortedArray } from './getSortedArray';
 import classes from './CardList.module.scss';
 import * as actions from '../../store/actions';
 
 function CardList(): JSX.Element {
   const dispatch = useDispatch();
   const getMoreTickets = () => dispatch(actions.getMoreTickets());
-
-  const finalArray = [];
-  const ticketsQuantity = useSelector(
+  const finalArray: JSX.Element[] = [];
+  let sortedArray: Ticket[] = [];
+  const ticketsQuantity: number = useSelector(
     (state: RootState) => state.ui.renderedTickets
   );
 
@@ -20,25 +21,27 @@ function CardList(): JSX.Element {
   const sortingValue: string = useSelector(
     (state: RootState) => state.ui.sorting.filterName
   );
+  if (sortingValue === 'Самый дешевый') {
+    sortedArray = getSortedArray(tickets, ['price']);
+  }
 
-  type SortingMatrix = [
-    ['timeSorted', 'Самый быстрый'],
-    ['priceSorted', 'Самый дешевый'],
-    ['optimalSorted', 'Оптимальный']
-  ];
+  if (sortingValue === 'Самый быстрый') {
+    const temporaryTicketsArray = [...tickets].map((ticket) => ({
+      ...ticket,
+      rating: ticket.segments[0].duration + ticket.segments[1].duration,
+    }));
+    sortedArray = getSortedArray(temporaryTicketsArray, ['rating']);
+  }
 
-  const sortingMatrix: SortingMatrix = [
-    ['timeSorted', 'Самый быстрый'],
-    ['priceSorted', 'Самый дешевый'],
-    ['optimalSorted', 'Оптимальный'],
-  ];
-
-  const orderValue = sortingMatrix.filter((el) =>
-    el[1] === sortingValue ? el[0] : false
-  )[0][0];
-  const sortingOrder: SortResult[] = useSelector(
-    (state: RootState) => state.info[orderValue]
-  );
+  if (sortingValue === 'Оптимальный') {
+    const temporaryTicketsArray = [...tickets].map((ticket) => ({
+      ...ticket,
+      rating:
+        ticket.price +
+        12.5 * (ticket.segments[0].duration + ticket.segments[1].duration),
+    }));
+    sortedArray = getSortedArray(temporaryTicketsArray, ['rating']);
+  }
 
   const filtersState = useSelector((state: RootState) => state.ui.filters);
   const filterMatrix = [
@@ -47,33 +50,35 @@ function CardList(): JSX.Element {
     filtersState['2 пересадки'],
     filtersState['3 пересадки'],
   ];
-  const filteredArray: SortResult[] = [];
-  const isLoading = useSelector((state: RootState) => state.ui.isLoading);
-  if (
-    !filterMatrix.includes(true) ||
-    (sortingOrder && sortingOrder.length === 0)
-  )
-    return isLoading || <NoTicketsIndicator />;
-  if (tickets && sortingOrder) {
+
+  if (!filterMatrix.includes(true)) return <NoTicketsIndicator />;
+
+  const filteredSortedArray: Ticket[] = [];
+
+  if (sortedArray.length > 0) {
     let j = 0;
-    while (filteredArray.length < ticketsQuantity && sortingOrder[j]) {
-      const matrixNumber: number = sortingOrder[j].stops;
+    while (
+      filteredSortedArray.length < ticketsQuantity &&
+      j < sortedArray.length
+    ) {
+      const matrixNumber: number =
+        getValueByPath(sortedArray[j], ['segments', '0', 'stops']).length +
+        getValueByPath(sortedArray[j], ['segments', '1', 'stops']).length;
+
       if (filterMatrix[matrixNumber]) {
-        filteredArray.push(sortingOrder[j]);
+        filteredSortedArray.push(sortedArray[j]);
       }
       j += 1;
     }
 
-    if (tickets && filteredArray) {
-      for (let i = 0; i < ticketsQuantity; i += 1) {
-        if (filteredArray[i]) {
-          const ticketIndex: number = filteredArray[i].index;
-          const ticket: Ticket = tickets[ticketIndex];
-          finalArray.push(<Card key={ticketIndex} card={ticket} />);
-        }
+    for (let i = 0; i < ticketsQuantity; i += 1) {
+      if (filteredSortedArray[i]) {
+        finalArray.push(<Card key={i} card={filteredSortedArray[i]} />);
       }
     }
+    if (filteredSortedArray.length === 0) return <NoTicketsIndicator />;
   }
+
   return (
     <>
       <ul className={classes['ticket-list']}>{finalArray}</ul>

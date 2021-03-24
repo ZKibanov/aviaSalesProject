@@ -15,21 +15,6 @@ export const ticketsAdded: ActionF = (tickets) => ({
   payload: tickets,
 });
 
-export const sortedByPriceAdded: ActionF = (ticketsOrder) => ({
-  type: actions.SORTED_BYPRICE_ADDED,
-  payload: ticketsOrder,
-});
-
-export const sortedByTimeAdded: ActionF = (ticketsOrder) => ({
-  type: actions.SORTED_BYTIME_ADDED,
-  payload: ticketsOrder,
-});
-
-export const sortedOptimalAdded: ActionF = (ticketsOrder) => ({
-  type: actions.SORTED_OPTIMAL_ADDED,
-  payload: ticketsOrder,
-});
-
 export const setSorting = (sortName: string) => ({
   type: actions.SET_SORTING,
   payload: {
@@ -41,9 +26,7 @@ export const getMoreTickets: ActionF = () => ({
   type: actions.GET_MORE_TICKETS,
 });
 
-export const setLoading = (isLoading: boolean) => ({
+export const setLoading = (loadingStatus: boolean) => ({
   type: actions.SET_LOADING,
-  payload: {
-    isLoading,
-  },
+  payload: loadingStatus,
 });

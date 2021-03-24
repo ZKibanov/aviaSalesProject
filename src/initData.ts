@@ -1,17 +1,9 @@
 import GetRemoteUrl from './api/GetRemoteUrl';
-import * as actions from './store/actionTypes';
+import * as actions from './store/actions';
 import { Ticket } from './components/types';
-import manageTicketsToStore from './store/mangeTicketsToStore';
 import store from './store/store';
 
 const tickets: Ticket[] = [];
-
-const setLoadingStatus = (loadingStatus: boolean) => {
-  store.dispatch({
-    type: actions.SET_LOADING,
-    payload: loadingStatus,
-  });
-};
 
 interface SearchId {
   searchId: string;
@@ -23,10 +15,22 @@ interface Data {
 }
 
 const initData = async () => {
-  setLoadingStatus(true);
+  store.dispatch(actions.setLoading(true));
+
   const searchId = await GetRemoteUrl.getResource(
     'https://front-test.beta.aviasales.ru/search'
   );
+
+  const initialData = await GetRemoteUrl.getResource(
+    `https://front-test.beta.aviasales.ru/tickets?searchId=${
+      (searchId as SearchId).searchId
+    }`
+  );
+
+  if (initialData && (initialData as Data).stop === false) {
+    tickets.push(...(initialData as Data).tickets);
+    store.dispatch(actions.ticketsAdded(tickets));
+  }
 
   if (searchId === null) {
     initData();
@@ -38,12 +42,11 @@ const initData = async () => {
         }`
       );
       if (data && (data as Data).stop === true) {
-        setLoadingStatus(false);
         tickets.push(...(data as Data).tickets);
-        manageTicketsToStore(tickets);
+        store.dispatch(actions.ticketsAdded(tickets));
+        store.dispatch(actions.setLoading(false));
       } else if (data && (data as Data).stop === false) {
         tickets.push(...(data as Data).tickets);
-        manageTicketsToStore(tickets);
         getTickets();
       } else {
         getTickets();

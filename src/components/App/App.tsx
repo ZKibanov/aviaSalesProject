@@ -22,7 +22,6 @@ const App: FC = () => {
     (state: RootState) => state.ui.sorting.filterName
   );
   const LoadingIndicator = isLoading && <Spinner />;
-
   return (
     <>
       <div className={classes.App}>
