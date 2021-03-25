@@ -6,6 +6,7 @@ import NoTicketsIndicator from '../NoTicketsIndicator';
 import { Ticket } from '../types';
 import { getValueByPath, getSortedArray } from './getSortedArray';
 import classes from './CardList.module.scss';
+import ErrorBoundary from '../../hoc/ErrorBoundary';
 import * as actions from '../../store/actions';
 
 function CardList(): JSX.Element {
@@ -73,7 +74,11 @@ function CardList(): JSX.Element {
 
     for (let i = 0; i < ticketsQuantity; i += 1) {
       if (filteredSortedArray[i]) {
-        finalArray.push(<Card key={i} card={filteredSortedArray[i]} />);
+        finalArray.push(
+          <ErrorBoundary key={`${i}EB`}>
+            <Card key={i} card={filteredSortedArray[i]} />
+          </ErrorBoundary>
+        );
       }
     }
     if (filteredSortedArray.length === 0) return <NoTicketsIndicator />;
