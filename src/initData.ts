@@ -1,5 +1,6 @@
 import GetRemoteUrl from './api/GetRemoteUrl';
-import * as actions from './store/actions';
+import * as actions from './store/uiReducer/actions';
+import { ticketsAdded } from './store/dataReducer/dataReducer';
 import { Ticket } from './components/types';
 import store from './store/store';
 
@@ -29,7 +30,7 @@ const initData = async () => {
 
   if (initialData && (initialData as Data).stop === false) {
     tickets.push(...(initialData as Data).tickets);
-    store.dispatch(actions.ticketsAdded(tickets));
+    store.dispatch(ticketsAdded(tickets));
   }
 
   if (searchId === null) {
@@ -43,7 +44,7 @@ const initData = async () => {
       );
       if (data && (data as Data).stop === true) {
         tickets.push(...(data as Data).tickets);
-        store.dispatch(actions.ticketsAdded(tickets));
+        store.dispatch(ticketsAdded(tickets));
         store.dispatch(actions.setLoading(false));
       } else if (data && (data as Data).stop === false) {
         tickets.push(...(data as Data).tickets);

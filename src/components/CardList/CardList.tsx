@@ -4,45 +4,26 @@ import Card from '../Card';
 import { RootState } from '../../store/store';
 import NoTicketsIndicator from '../NoTicketsIndicator';
 import { Ticket } from '../types';
-import { getValueByPath, getSortedArray } from './getSortedArray';
+import getValueByPath from './getValueByPath';
+import sortingWithOptions from './sortingWithOptions';
 import classes from './CardList.module.scss';
 import ErrorBoundary from '../../hoc/ErrorBoundary';
-import * as actions from '../../store/actions';
+import * as actions from '../../store/uiReducer/actions';
 
 function CardList(): JSX.Element {
   const dispatch = useDispatch();
   const getMoreTickets = () => dispatch(actions.getMoreTickets());
   const finalArray: JSX.Element[] = [];
-  let sortedArray: Ticket[] = [];
   const ticketsQuantity: number = useSelector(
     (state: RootState) => state.ui.renderedTickets
   );
 
-  const { tickets } = useSelector((state: RootState) => state.info);
+  const { tickets } = useSelector((state: RootState) => state.data);
   const sortingValue: string = useSelector(
     (state: RootState) => state.ui.sorting.filterName
   );
-  if (sortingValue === 'Самый дешевый') {
-    sortedArray = getSortedArray(tickets, ['price']);
-  }
 
-  if (sortingValue === 'Самый быстрый') {
-    const temporaryTicketsArray = [...tickets].map((ticket) => ({
-      ...ticket,
-      rating: ticket.segments[0].duration + ticket.segments[1].duration,
-    }));
-    sortedArray = getSortedArray(temporaryTicketsArray, ['rating']);
-  }
-
-  if (sortingValue === 'Оптимальный') {
-    const temporaryTicketsArray = [...tickets].map((ticket) => ({
-      ...ticket,
-      rating:
-        ticket.price +
-        12.5 * (ticket.segments[0].duration + ticket.segments[1].duration),
-    }));
-    sortedArray = getSortedArray(temporaryTicketsArray, ['rating']);
-  }
+  const sortedArray: Ticket[] = sortingWithOptions(tickets, sortingValue);
 
   const filtersState = useSelector((state: RootState) => state.ui.filters);
   const filterMatrix = [

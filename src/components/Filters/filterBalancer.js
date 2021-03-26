@@ -1,7 +1,7 @@
 export default function filterBalancer(
   filtersObject,
-  filterName,
-  newFilterState
+  newFilterState,
+  filterName
 ) {
   let newFiltersObject = { ...filtersObject, [filterName]: newFilterState };
   if (filterName === 'Все') {

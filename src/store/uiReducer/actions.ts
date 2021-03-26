@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { FiltersObject } from '../components/types';
+import { FiltersObject } from '../../components/types';
 
 type ActionF = <T>(payload?: T) => { type: string; payload?: T };
 
@@ -8,11 +8,6 @@ export const filtersChanged = (newFilters: FiltersObject) => ({
   payload: {
     filters: newFilters,
   },
-});
-
-export const ticketsAdded: ActionF = (tickets) => ({
-  type: actions.TICKETS_ADDED,
-  payload: tickets,
 });
 
 export const setSorting = (sortName: string) => ({

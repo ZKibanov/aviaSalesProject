@@ -1,11 +1,11 @@
-import { combineReducers } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
 
-import uiReducer from './uiReducer';
-import dataReducer from './dataReducer';
+import uiReducer from './uiReducer/uiReducer';
+import dataReducer from './dataReducer/dataReducer';
 
 const reducer = combineReducers({
   ui: uiReducer,
-  info: dataReducer,
+  data: dataReducer,
 });
 
 export default reducer;

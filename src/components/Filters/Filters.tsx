@@ -3,22 +3,24 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiltersObject } from '../types';
 import classes from '../App/App.module.scss';
 import { RootState } from '../../store/store';
-import * as actions from '../../store/actions';
-import filterBalancer from '../../store/filterBalancer';
+import * as actions from '../../store/uiReducer/actions';
+import filterBalancer from './filterBalancer';
 
 function Filters() {
   const dispatch = useDispatch();
 
   const filtersState = useSelector((state: RootState) => state.ui.filters);
   const checkboxArray = [];
-  const cEvent = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const cEvent = (ev: React.ChangeEvent<HTMLInputElement>): void => {
     if (ev.target.labels !== null) {
-      const newFilters: FiltersObject = filterBalancer(
-        filtersState,
-        ev.target.labels[0].textContent,
-        ev.target.checked
-      );
-      dispatch(actions.filtersChanged(newFilters));
+      if (ev.target.labels[0].textContent !== null) {
+        const newFilters: FiltersObject = filterBalancer(
+          filtersState,
+          ev.target.checked,
+          ev.target.labels[0].textContent
+        );
+        dispatch(actions.filtersChanged(newFilters));
+      }
     }
   };
 
