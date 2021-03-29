@@ -3,9 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import Card from '../Card';
 import { RootState } from '../../store/store';
 import NoTicketsIndicator from '../NoTicketsIndicator';
-import { Ticket } from '../types';
-import getValueByPath from './getValueByPath';
-import sortingWithOptions from './sortingWithOptions';
+import { Ticket } from '../../types';
+import { sortingWithOptions, getValueByPath } from '../../functions';
 import classes from './CardList.module.scss';
 import ErrorBoundary from '../../hoc/ErrorBoundary';
 import * as actions from '../../store/uiReducer/actions';
@@ -13,7 +12,6 @@ import * as actions from '../../store/uiReducer/actions';
 function CardList(): JSX.Element {
   const dispatch = useDispatch();
   const getMoreTickets = () => dispatch(actions.getMoreTickets());
-  const finalArray: JSX.Element[] = [];
   const ticketsQuantity: number = useSelector(
     (state: RootState) => state.ui.renderedTickets
   );
@@ -35,39 +33,43 @@ function CardList(): JSX.Element {
 
   if (!filterMatrix.includes(true)) return <NoTicketsIndicator />;
 
-  const filteredSortedArray: Ticket[] = [];
+  const buildFinalArray = (ticketsArray: Ticket[]) => {
+    const filteredSortedArray: Ticket[] = [];
+    const finalArray: JSX.Element[] = [];
 
-  if (sortedArray.length > 0) {
-    let j = 0;
-    while (
-      filteredSortedArray.length < ticketsQuantity &&
-      j < sortedArray.length
-    ) {
-      const matrixNumber: number =
-        getValueByPath(sortedArray[j], ['segments', '0', 'stops']).length +
-        getValueByPath(sortedArray[j], ['segments', '1', 'stops']).length;
+    if (ticketsArray.length > 0) {
+      let j = 0;
+      while (
+        filteredSortedArray.length < ticketsQuantity &&
+        j < ticketsArray.length
+      ) {
+        const matrixNumber: number =
+          getValueByPath(ticketsArray[j], ['segments', '0', 'stops']).length +
+          getValueByPath(ticketsArray[j], ['segments', '1', 'stops']).length;
 
-      if (filterMatrix[matrixNumber]) {
-        filteredSortedArray.push(sortedArray[j]);
+        if (filterMatrix[matrixNumber]) {
+          filteredSortedArray.push(ticketsArray[j]);
+        }
+        j += 1;
       }
-      j += 1;
-    }
 
-    for (let i = 0; i < ticketsQuantity; i += 1) {
-      if (filteredSortedArray[i]) {
-        finalArray.push(
-          <ErrorBoundary key={`${i}EB`}>
-            <Card key={i} card={filteredSortedArray[i]} />
-          </ErrorBoundary>
-        );
+      for (let i = 0; i < ticketsQuantity; i += 1) {
+        if (filteredSortedArray[i]) {
+          finalArray.push(
+            <ErrorBoundary key={`${i}EB`}>
+              <Card key={i} card={filteredSortedArray[i]} />
+            </ErrorBoundary>
+          );
+        }
       }
+      if (filteredSortedArray.length === 0) return <NoTicketsIndicator />;
     }
-    if (filteredSortedArray.length === 0) return <NoTicketsIndicator />;
-  }
+    return finalArray;
+  };
 
   return (
     <>
-      <ul className={classes['ticket-list']}>{finalArray}</ul>
+      <ul className={classes['ticket-list']}>{buildFinalArray(sortedArray)}</ul>
       <button
         key="nav_button-more"
         type="button"

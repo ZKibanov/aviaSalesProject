@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import logo from './images/logo.svg';
 import classes from './App.module.scss';
-import Navigation from '../Navigation/Navigation';
+import SortTabs from '../SortTabs/SortTabs';
 import CardList from '../CardList';
 import Filters from '../Filters/Filters';
 import { RootState } from '../../store/store';
@@ -21,7 +21,7 @@ const App: FC = () => {
         <main className={classes.main}>
           <Filters />
           <section className={classes.content__container}>
-            <Navigation />
+            <SortTabs />
             <div className={classes.content}>
               {LoadingIndicator}
               <CardList />

@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { FiltersObject } from '../../components/types';
+import { FiltersObject } from '../../types';
 
 type ActionF = <T>(payload?: T) => { type: string; payload?: T };
 

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Ticket } from '../../components/types';
+import { Ticket } from '../../types';
 
 interface DataState {
   tickets: Ticket[];

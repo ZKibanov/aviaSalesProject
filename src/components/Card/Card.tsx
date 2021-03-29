@@ -1,6 +1,6 @@
 import React from 'react';
 import { format, add } from 'date-fns';
-import { Ticket } from '../types';
+import { Ticket } from '../../types';
 import classes from './Card.module.scss';
 
 interface IProps {

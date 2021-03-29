@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import classes from './Navigation.module.scss';
+import classes from './SortTabs.module.scss';
 import { RootState } from '../../store/store';
 import * as actions from '../../store/uiReducer/actions';
 
-const Navigation: FC = () => {
+const SortTabs: FC = () => {
   const dispatch = useDispatch();
   const activeButton = useSelector(
     (state: RootState) => state.ui.sorting.filterName
@@ -53,4 +53,4 @@ const Navigation: FC = () => {
   );
 };
 
-export default Navigation;
+export default SortTabs;

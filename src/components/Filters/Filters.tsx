@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiltersObject } from '../types';
+import { FiltersObject } from '../../types';
 import classes from '../App/App.module.scss';
 import { RootState } from '../../store/store';
 import * as actions from '../../store/uiReducer/actions';
-import filterBalancer from './filterBalancer';
+import { filterBalancer } from '../../functions';
 
 function Filters() {
   const dispatch = useDispatch();

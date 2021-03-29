@@ -1,7 +1,7 @@
 import GetRemoteUrl from './api/GetRemoteUrl';
 import * as actions from './store/uiReducer/actions';
 import { ticketsAdded } from './store/dataReducer/dataReducer';
-import { Ticket } from './components/types';
+import { Ticket } from './types';
 import store from './store/store';
 
 const tickets: Ticket[] = [];
